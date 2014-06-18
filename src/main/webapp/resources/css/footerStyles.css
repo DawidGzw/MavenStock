@@ -1,0 +1,20 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-06-03, 14:41:33
+    Author     : dawid
+*/
+#bottom {
+    background-color: rgb(211,211,211);
+    margin: 0 -7px -7px -7px;
+    -webkit-box-shadow: 0px -5px 5px 0px rgba(50, 50, 50, 0.45);
+    -moz-box-shadow:    0px -5px 5px 0px rgba(50, 50, 50, 0.45);
+    box-shadow:         0px -5px 5px 0px rgba(50, 50, 50, 0.45);
+    color: rgb(79, 79, 79);
+    text-align: center;
+    padding-top: 30px;
+    text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.7);
+}

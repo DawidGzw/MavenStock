@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./mainTemplate.xhtml">
+            <ui:define name="stylesheets">
+                <h:outputStylesheet library="css" name="chartWebsite.css"/>
+                <style>
+
+                </style>
+                <script type="text/javascript">
+
+                </script>
+            </ui:define>
+            <ui:define name="content">
+
+                <div style="width: 90%; margin: 0 auto;">
+                <p:fieldset legend="#{msg['charWebsite.fieldsetOptions']}" toggleable="true" toggleSpeed="500" style="margin-top: 50px;">  
+                    <h:form id="chartsForm" >
+
+                        <h:panelGrid id="fieldsetLeftGrid" columns="2" style="margin-top: 30px; float: left;">
+                            <h:outputText  value="#{msg['chartWebsite.filedset.indexesSelector']}: " />  
+                            <p:selectOneMenu value="#{clientBean.choosedIndex}"  id="indexesSelector"  validatorMessage="#{msg['chartWebsite.fieldset.index.chooseMessage']}" onchange="CHART.classes.events.clearDateFields()">   
+                                    <f:selectItems value="#{clientBean.availableIndexesMap.entrySet()}" var="entry" itemLabel="#{entry.value}" itemValue="#{entry.key}"/>
+                                    <p:ajax  event="change" process="indexesSelector" update="sharesSelector"/>
+                                </p:selectOneMenu>
+                            <h:outputText  value="#{msg['chartWebsite.filedset.sharesSelector']}: " />
+                            <p:selectOneMenu value="#{clientBean.choosedShare}" disabled="#{clientBean.choosedIndex == null}"  id="sharesSelector"  validatorMessage="#{msg['chartWebsite.fieldset.share.chooseMessage']}" onchange="CHART.classes.events.clearDateFields()">   
+                                    <f:selectItems value="#{clientBean.availableSharesMap.entrySet()}" var="entry" itemLabel="#{entry.value}" itemValue="#{entry.key}" />
+                                    <p:ajax  event="change" process="sharesSelector" update="dateFromCal dateToCal" listener="#{clientBean.clearDates()}"/>
+                                </p:selectOneMenu>
+                            <h:outputText  value="#{msg['chartWebsite.filedset.dateFrom']}: " />
+                            <h:panelGroup style="position: relative;">
+                                <p:calendar id="dateFromCal" locale="#{msg['main.locale']}" value="#{clientBean.from}"
+                                            showButtonPanel="true" navigator="true"
+                                            pattern="dd-MM-yyyy" mindate="#{clientBean.choosedShareDateRangeFrom}" maxdate="#{clientBean.choosedShareDateRangeTo}"
+                                            required="true" disabled="#{clientBean.choosedShare == null}"
+                                            requiredMessage="#{msg['chartWebsite.fieldset.dateFrom.requiredMessage']}"
+                                            converterMessage="#{msg['chartWebsite.fieldset.dateFrom.converterMessage']}"/>
+                                <p:message for="dateFromCal" id="dateFromCalMessage"/>
+                            </h:panelGroup>
+                            <h:outputText value="#{msg['chartWebsite.filedset.dateTo']}: " />
+                            <h:panelGroup style="position: relative">
+                                <p:calendar id="dateToCal" locale="#{msg['main.locale']}"  value="#{clientBean.to}"
+                                            showButtonPanel="true" navigator="true"
+                                            pattern="dd-MM-yyyy" mindate="#{clientBean.choosedShareDateRangeFrom}" maxdate="#{clientBean.choosedShareDateRangeTo}"
+                                            required="true" disabled="#{clientBean.choosedShare == null}"
+                                            requiredMessage="#{msg['chartWebsite.fieldset.dateTo.requiredMessage']}"
+                                            converterMessage="#{msg['chartWebsite.fieldset.dateFrom.converterMessage']}"/>
+                                <p:message for="dateToCal" id="dateToCalMessage"/>
+                            </h:panelGroup> 
+                        </h:panelGrid>
+                        <h:panelGrid id="fieldsetRightGrid" columns="2" style="margin-top: 30px; float: right; margin-right: 10%">
+                            <h:outputLabel for="sharesScaler" value="#{msg['chartWebsite.filedset.sharesScaler']}: " />  
+                            <p:selectOneMenu id="sharesScaler" >   
+                                <f:selectItem itemLabel="#{msg['chartWebsite.select.scale.daily']}" itemValue="daily"/>
+                                <f:selectItem itemLabel="#{msg['chartWebsite.select.scale.weakly']}" itemValue="weekly"/>
+                                <f:selectItem itemLabel="#{msg['chartWebsite.select.scale.monthly']}" itemValue="monthly"/> 
+                            </p:selectOneMenu>
+
+                            <h:panelGroup style="margin-top: 30px;"/>
+                            <p:commandButton value="#{msg['chartWebsite.fieldset.getDraw.button']}"  style="margin-top: 30px;" id="chartUpdateButton"
+                                             update="dateFromCalMessage dateToCalMessage" process="dateFromCal dateToCal"/>
+                        </h:panelGrid>
+                    </h:form> 
+                </p:fieldset>
+                <p:fieldset legend="#{msg['charWebsite.fieldsetProperties']}" toggleable="true" toggleSpeed="500" style="margin-top: 50px;">
+                    <h:form id="chartProperties">
+                        <h:panelGrid id="colorChooser" columns="2">
+                            <h:outputText value="#{msg['chartWebsite.pickColor.background']}" />
+                            <p:colorPicker id="colorPicker1" value="#{requestColorHolder.backgroundColor}"/>
+                            <h:outputText value="#{msg['chartWebsite.pickColor.text']}" />
+                            <p:colorPicker id="colorPicker2" value="#{requestColorHolder.textColor}"/>
+                            <h:outputText value="#{msg['chartWebsite.pickColor.chart']}" />
+                            <p:colorPicker id="colorPicker3" value="#{requestColorHolder.chartColor}"/>
+                            <h:panelGroup/>
+                            <input type="button" id="chartProperties:colorChooseButton" value="#{msg['chartWebsite.fieldProperties.colorChooserButton']}" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                                   style="padding: 5px;"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:fieldset>
+                <div id="output"></div>
+                <p:panel id="mainChartPanel" header="#{msg['charWebsite.mainChart']}" toggleable="true"  closable="false" toggleOrientation="horizontal" style="margin-top: 50px; padding: 2px; position: relative;" >  
+                    <f:facet name="options">
+                        <h:form>
+                            <p:menu>  
+                                <p:submenu label="#{msg['chartWebsite.mainChart.submenu.ratio']}">  
+                                    <p:menuitem id="r_4_3" value="#{msg['chartWebsite.mainChart.submenu.ratio.4_3']}" icon="ui-icon-arrowrefresh-1-w" onclick="CHART.classes.events.applyScreenRatioToPanel(1.33, 0)"/>  
+                                    <p:menuitem id="r_16_9" value="#{msg['chartWebsite.mainChart.submenu.ratio.16_9']}" icon="ui-icon-arrowrefresh-1-w" onclick="CHART.classes.events.applyScreenRatioToPanel(1.78, 0)"/>
+                                    <p:menuitem id="r_16_6" value="#{msg['chartWebsite.mainChart.submenu.ratio.16_6']}" icon="ui-icon-arrowrefresh-1-w" onclick="CHART.classes.events.applyScreenRatioToPanel(2.67, 0)"/>
+                                    <p:menuitem id="r_16_4" value="#{msg['chartWebsite.mainChart.submenu.ratio.16_4']}" icon="ui-icon-arrowrefresh-1-w" onclick="CHART.classes.events.applyScreenRatioToPanel(4, 0)"/>
+                                </p:submenu>  
+                                <p:submenu label="#{msg['chartWebsite.mainChart.submenu.intervals']}">  
+                                    <p:menuitem id="i_20" value="#{msg['chartWebsite.mainChart.submenu.intervals.50']}" icon="ui-icon-arrowrefresh-1-w" onclick="CHART.classes.events.setResultsPerPage(50)"/>  
+                                    <p:menuitem id="i_50" value="#{msg['chartWebsite.mainChart.submenu.intervals.100']}" icon="ui-icon-arrowrefresh-1-w" onclick="CHART.classes.events.setResultsPerPage(100)"/>
+                                    <p:menuitem id="i_100" value="#{msg['chartWebsite.mainChart.submenu.intervals.200']}" icon="ui-icon-arrowrefresh-1-w" onclick="CHART.classes.events.setResultsPerPage(200)"/>
+                                </p:submenu>  
+                                <p:submenu label="#{msg['chartWebsite.mainChart.submenu.view']}">  
+                                    <p:menuitem id="v_line" value="#{msg['chartWebsite.mainChart.submenu.view.line']}" icon="ui-icon-arrowrefresh-1-w" onclick="CHART.classes.events.setCanvasPainter('line', 0)"/>  
+                                    <p:menuitem id="v_bar" value="#{msg['chartWebsite.mainChart.submenu.view.bar']}" icon="ui-icon-arrowrefresh-1-w" onclick="CHART.classes.events.setCanvasPainter('bar', 0)"/>
+                                    <p:menuitem id="v_candle" value="#{msg['chartWebsite.mainChart.submenu.view.candle']}" icon="ui-icon-arrowrefresh-1-w" onclick="CHART.classes.events.setCanvasPainter('candle', 0)"/>
+                                </p:submenu>  
+                            </p:menu>
+                        </h:form>
+                    </f:facet>
+                    <div id="leftChartChanger" class="chartNavigator hiddenClass" >&lt;</div>
+                    <div id ="rightChartChanger" class="chartNavigator hiddenClass" >&gt;</div>
+                    <canvas id ="mainChart" style="width: 100%; margin-top: -5px;" >
+                    </canvas>
+                </p:panel>
+
+                <h:outputScript library="javascript/primefacesSupport" name="calendarLocales.js" />
+                <h:outputScript library="javascript/chartWebsite" name="chartWebsiteNamespace.js" />
+                <h:outputScript library="javascript/chartWebsite" name="chartWebsocketDef.js" />
+                <h:outputScript library="javascript/chartWebsite" name="canvasClassHierarchy.js" />
+                </div>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

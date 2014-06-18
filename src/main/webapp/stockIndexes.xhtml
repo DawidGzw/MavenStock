@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./mainTemplate.xhtml">
+            <ui:define name="stylesheets">
+                <style>
+                    .ui-datatable-header{
+                        padding: 0 !important;
+                    }
+                </style>
+                <script type="text/javascript">
+
+                </script>
+            </ui:define>
+            <ui:define name="content">
+                <ui:repeat var="index" value="#{clientBean.availableIndexes}" >
+                    <div style="width: 90%; margin: 50px auto 0 auto">
+                    <h:form >
+                        <p:dataTable var="share" value="#{index.dataModel}" selectionMode="single" selection="#{indexViewPage.selectedPriceHolder}" rows="10"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,20">
+                            <f:facet name="header">
+                                <p:commandButton value="#{index.toString()}" action="#{indexViewPage.goToChartPageForIndex(index.id)}" style="text-decoration: none; width: 100%;" ajax="false" />
+                            </f:facet>
+                            <p:column headerText="#{msg['index.share.name']}" sortBy="#{share.name}">
+                                <h:outputText value="#{share.name}" />
+                            </p:column>
+
+                            <p:column headerText="#{msg['index.share.shortName']}" sortBy="#{share.shortName}">
+                                <h:outputText value="#{share.shortName}" />
+                            </p:column>
+
+                            <p:column headerText="#{msg['index.share.price']}" sortBy="#{share.lastPrice.close}">
+                                <h:outputText value="#{share.lastPrice.close}" />
+                            </p:column>
+
+                            <p:column headerText="#{msg['index.share.change']} (%)" sortBy="#{share.lastPrice.change}" >
+                                <h:outputText value="#{share.lastPrice.change}" style="#{share.lastPrice.change>0 ? 'color: green;' : share.lastPrice.change==0 ? '' : 'color: red;'}"/>
+                            </p:column>
+
+                            <f:facet name="footer">
+                                <p:commandButton  icon="ui-icon-search" value="#{msg['index.share.view']}" ajax="false" action="#{indexViewPage.goToChartPage(index.id)}" />
+                            </f:facet>                        
+                        </p:dataTable>
+
+                    </h:form>
+                    </div>
+                </ui:repeat>
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>
+

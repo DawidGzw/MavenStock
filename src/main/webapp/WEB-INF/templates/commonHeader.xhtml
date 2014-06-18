@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:body>
+        <ui:composition>
+            <div id="headerBar">
+                <h1>#{msg['main.title']}</h1>
+            </div>
+            <div id="fixedBar">        
+                <h:panelGroup layout="block" id="leftMenuActivator">
+                    <h:form id="leftMenuActivatorForm"> 
+                        <p:commandLink  id="leftMenuLink" style="#{'text-align: center; text-decoration: none;color: black;'.concat(leftMenuStatus.menuOpen ? 'display: none;' : 'padding-left:20px;padding-right:20px;')}" 
+                                        action="#{leftMenuStatus.openMenu()}" update=":leftMenuActivator,:left" oncomplete="GLOBALS.events.openingMenuEvent()">
+                            <div id="menuShowSpan" style="display: inline">Menu <div id="leftMenuImageOpen"/></div>
+                        </p:commandLink>
+                    </h:form>
+                </h:panelGroup>
+                <h:panelGroup layout="block" id="loggingSubmenu">
+                    <h:outputText id="welcomeMessageId" value="#{msg['main.welcome.message']} "/>
+                    <h:link outcome="index" id="userNameGenerated" value="#{clientBean.userName}" rendered="#{clientBean.loggedUser}"/>
+                    <h:outputText id="anonymousUserName" value="#{msg['main.defaultUser']}" rendered="#{!clientBean.loggedUser}"/>
+                    <h:outputText id="loginLink" class="logingFields" value="#{ms = clientBean.loggedUser ? msg['main.welcome.logoutMessage'] :  msg['main.welcome.loginMessage']} >>" style="margin-right: 20px; margin-left:  50px;" />                
+                    <p:growl id="growlLoginPanel" autoUpdate="true" />
+                    <p:overlayPanel id="loginPanel" for="loginLink" hideEffect="fade" rendered="#{!clientBean.loggedUser}">
+                        <h:form id="loginForm">
+                            <p:panel header="#{msg['main.login.panel']}" id="LoginPopupPanel" widgetVar="LoginPanel">  
+
+                                <h:panelGrid columns="2" id="matchGrid">                     
+                                    <h:outputText value="#{msg['main.login.username']} " />
+                                    <p:inputText id="loginName"   
+                                                 value="#{loginBean.username}" required="true"   
+                                                 requiredMessage="#{msg['main.login.panel.usernameRequired']}"/>
+
+                                    <h:outputText value="#{msg['main.login.password']} " />  
+                                    <p:password id="loginPass" value="#{loginBean.password}" required="true"
+                                                requiredMessage="#{msg['main.login.panel.passwordRequired']}"/>
+                                    <h:panelGroup/>
+                                    <p:commandButton value="login" id="loginButton"  update=":loggingSubmenu,:left"
+                                                     oncomplete="GLOBALS.events.menuResizerWithTransitionsAdd()"
+                                                     action="#{loginBean.processLogin()}"/> 
+                                </h:panelGrid>  
+                            </p:panel> 
+                        </h:form>
+                    </p:overlayPanel>
+                    <p:overlayPanel id="logoutPanel" for="loginLink" hideEffect="fade" rendered="#{clientBean.loggedUser}">
+                        <h:form id="logoutForm">
+                            <p:panel header="#{msg['main.logout.panel']}" id="LogoutPopupPanel">  
+                                <h:outputText value="#{msg['main.logout.ask']}" />
+                                <h:panelGrid columns="2" id="matchGrid">                     
+                                    <p:commandButton value="#{msg['main.logout.no']}" style="float: left;" update=":loggingSubmenu"/>
+                                    <p:commandButton value="#{msg['main.logout.yes']}" style="margin-left: 50px;"  action="#{loginBean.processLogout()}"
+                                                     update=":loggingSubmenu,:left" oncomplete="GLOBALS.events.menuResizerWithTransitionsAdd()"/>  
+                                </h:panelGrid>  
+                            </p:panel> 
+                        </h:form>
+                    </p:overlayPanel>
+                </h:panelGroup>
+                <h2>#{msg['main.fixedHeader']}</h2>
+            </div>
+        </ui:composition>
+    </h:body>
+</html>
+

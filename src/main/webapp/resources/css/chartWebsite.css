@@ -1,0 +1,52 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Apr 6, 2014, 10:09:35 PM
+    Author     : dawid
+*/
+
+.ui-message-error {
+    left: 100% !important;
+    top: 0px !important;
+    width: 150% !important;
+    position: absolute !important;
+    -webkit-box-shadow: 5px 5px 5px 0px rgba(50, 50, 50, 0.75) !important;
+    -moz-box-shadow:    5px 5px 5px 0px rgba(50, 50, 50, 0.75) !important;
+    box-shadow:         5px 5px 5px 0px rgba(50, 50, 50, 0.75) !important;
+    z-index: 111 !important;
+}
+
+.ui-panel-content {
+    padding: 5px 0px 0px 0px !important;
+    margin-bottom: -5px !important;
+
+}
+
+.chartNavigator{
+    position: absolute;
+    top: 0px; 
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 100%; 
+    padding: 5px 10px;
+    font-size: 1.5em; 
+    color: white;
+}
+
+#leftChartChanger{
+    left: -20px;
+}
+
+#rightChartChanger{
+    right: -20px;
+}
+
+.chartNavigator:hover{
+    background-color: rgba(0,0,0,0.6);
+    cursor: pointer;
+}
+.hiddenClass {
+    display: none;
+}

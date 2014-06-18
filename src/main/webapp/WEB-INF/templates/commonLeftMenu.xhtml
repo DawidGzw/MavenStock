@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:body>
+        <ui:composition>
+            <h:form id="menuClose">
+                <p:commandLink id="closeLink" update=":left, :leftMenuActivator" action="#{leftMenuStatus.closeMenu()}" 
+                               oncomplete="GLOBALS.events.closingMenuEvent()" style="width: 27px; height: 54px; display: block; margin: 25px auto;">
+                    <span id='closeLinkSpan'/>
+                </p:commandLink>
+            </h:form>
+            <ul >
+                <li><h:link value="#{msg['main.startPage']}" outcome="index"/></li>
+                <li><h:link value="#{msg['main.chartPage']}" outcome="chartWebsite"/></li>
+                <li><h:link value="#{msg['main.indexPage']}" outcome="stockIndexes"/></li>
+                <h:panelGroup rendered="#{clientBean.loggedUser}">
+                <li><h:link value="#{msg['main.profilePage']}" outcome="index"/></li>
+                <li><h:link value="#{msg['main.analysisPage']}" outcome="index"/></li>
+                </h:panelGroup>
+            </ul>
+        </ui:composition>
+    </h:body>
+</html>
+

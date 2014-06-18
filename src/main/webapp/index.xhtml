@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <body>
+
+        <ui:composition template="./mainTemplate.xhtml">
+
+            <ui:define name="stylesheets">
+            </ui:define>
+
+            <ui:define name="content">
+                <div id="indexText" style="width: 80%; margin: 0 auto; font-family: 'Arial Black', sans-serif;">
+                    <h2>Wprowadzenie</h2>
+                    <p>Aplikacja powstała z myślą o umożliwieniu użytkownikom analizowania i testowania różnych strategi inwestycyjnych
+                        na danych historycznych.
+                        Dziś działają części odpowiedzialne za pobieranie danych instrumentów finansowych z sieci
+                        oraz ich prezentację użytkownikowi. Docelowo mają zostać dodane partie kodu odpowiedzialne za tworzenie, przetwarzanie, prezentowanie
+                        i zapisywanie wyników działania strategii. Przez termin "strategia" ma na myśli popularne wskaźniki używane w analizie technicznej (średnie kroczące, 
+                        wstęgi Bollingera, wskażnik MACD itp.) i sygnały kupna/sprzedaży, które generują. Do zaimplementowania została także część odpowiedzialna za bezpieczeństowo
+                        i konta użytkowników.
+                        Całość wykonana jest w technologii JEE 7 z wykorzystaniem biblioteki komponentów PrimeFaces w wersji 4.0, serwera aplikacji Glassfish oraz bazy danych "Derby".
+                        W aplikacji używany jest znacznik "canvas" z HTML 5 oraz technologia "WebSockets" (do tworzewnia wykresów).
+                    </p>
+                </div>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>
